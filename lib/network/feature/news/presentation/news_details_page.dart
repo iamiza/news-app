@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:news_app/network/feature/news/data/news_article.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class NewsDetailsPage extends StatelessWidget {
   final Articles news;
@@ -43,12 +44,18 @@ class NewsDetailsPage extends StatelessWidget {
                 news.content ?? ' ',
                 maxLines: 10,
               ),
+              const SizedBox(
+                height: 16,
+              ),
               const Text(
                 "Check Full News at",
-                style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
-              //url launcher
-
+              TextButton(
+                  onPressed: () {
+                    _launchUrl(news.url ?? '');
+                  },
+                  child: Text(news.url ?? '')),
               const SizedBox(height: 16),
               const Row(
                 children: [
@@ -61,9 +68,7 @@ class NewsDetailsPage extends StatelessWidget {
                   ),
                 ],
               ),
-
               const SizedBox(height: 16),
-
               ListView.separated(
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
@@ -89,5 +94,11 @@ class NewsDetailsPage extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+Future<void> _launchUrl(String url) async {
+  if (!await launchUrl(Uri.parse(url))) {
+    throw Exception('Could not launch $url');
   }
 }
